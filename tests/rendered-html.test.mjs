@@ -259,6 +259,11 @@ test("wires Creator Studio to shared auth, unified generation, detailed polling,
   assert.match(publishDialog, /onCreditsRemaining/);
   assert.match(creatorStyles, /\.progressTrack\s*\{[^}]*overflow:\s*hidden/);
   assert.match(creatorStyles, /\.progressTrack span\s*\{[^}]*max-width:\s*100%/);
+  const studioShellStyles = creatorStyles.match(/\.studioShell\s*\{([^}]*)\}/)?.[1] ?? "";
+  assert.match(studioShellStyles, /min-height:\s*100dvh/);
+  assert.doesNotMatch(studioShellStyles, /(^|;)\s*height:\s*100dvh/);
+  assert.doesNotMatch(studioShellStyles, /overflow-y:\s*auto/);
+  assert.match(creatorStyles, /\.previewBody\s*\{[^}]*flex:\s*1 0 auto/);
   assert.match(samsarClient, /authToken/);
   assert.doesNotMatch(samsarClient, /apiKey[,\s:]/);
   assert.match(samsarAuth, /verifyWithConfiguredToken\(\)/);
