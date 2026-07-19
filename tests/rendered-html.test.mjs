@@ -105,7 +105,7 @@ test("keeps the viewer wired to the public interactive publication contract", as
   assert.match(favicon, /<circle/);
   assert.match(favicon, /transform="translate\(10\.44 24\.9\) scale\(\.0269 -\.0269\)"/);
   assert.doesNotMatch(favicon, /<text/);
-  assert.match(packageJson, /"samsar-js": "0\.48\.47"/);
+  assert.match(packageJson, /"samsar-js": "0\.48\.48"/);
   await assert.rejects(access(new URL("../app/_sites-preview", import.meta.url)));
 });
 
