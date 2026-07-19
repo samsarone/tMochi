@@ -73,13 +73,15 @@ type PendingGenerationSubmission = {
 };
 
 type StoredCreatorState = {
-  version: 2;
+  version: 3;
+  sessionId: string;
   form: CreatorForm;
   pendingSubmission?: PendingGenerationSubmission;
 };
 
 const POLL_INTERVAL_MS = 5_000;
 const MAX_POLL_BACKOFF_MS = 60_000;
+const DEFAULT_BRANCHING_LEVELS = 2;
 const COMPLETED_STAGE_STATUSES = new Set(["COMPLETED", "DONE", "SUCCESS", "SUCCEEDED"]);
 const PIPELINE_STAGE_ORDER = [
   "prompt_generation",
@@ -362,7 +364,7 @@ export default function CreatorStudio({
     duration: 30,
     imageModel: "NANOBANANA2",
     videoModel: "COSMOS3SUPERI2V",
-    levels: 2,
+    levels: DEFAULT_BRANCHING_LEVELS,
   });
   const [requestId, setRequestId] = useState(initialSessionId.trim());
   const [isDraft, setIsDraft] = useState(initialDraft || !initialSessionId.trim());
@@ -472,6 +474,13 @@ export default function CreatorStudio({
     if (!raw) return;
     try {
       const saved = JSON.parse(raw) as Partial<StoredCreatorState>;
+      const savedSessionId = typeof saved.sessionId === "string"
+        ? saved.sessionId.trim()
+        : "";
+      if (saved.version !== 3 || !requestId || savedSessionId !== requestId) {
+        window.localStorage.removeItem(creatorStorageKey);
+        return;
+      }
       const savedForm = normalizeStoredForm(saved.form);
       const pending = saved.pendingSubmission;
       const savedPending =
@@ -489,7 +498,7 @@ export default function CreatorStudio({
     } catch {
       window.localStorage.removeItem(creatorStorageKey);
     }
-  }, [creatorStorageKey]);
+  }, [creatorStorageKey, requestId]);
 
   useEffect(() => {
     latestRequestRef.current = requestId;
@@ -671,7 +680,8 @@ export default function CreatorStudio({
       );
       pendingSubmissionRef.current = { id: clientRequestId, fingerprint };
       window.localStorage.setItem(creatorStorageKey, JSON.stringify({
-        version: 2,
+        version: 3,
+        sessionId: submittedDraftId,
         form,
         pendingSubmission: pendingSubmissionRef.current,
       } satisfies StoredCreatorState));
@@ -694,7 +704,8 @@ export default function CreatorStudio({
       if (response.status === 402) {
         pendingSubmissionRef.current = null;
         window.localStorage.setItem(creatorStorageKey, JSON.stringify({
-          version: 2,
+          version: 3,
+          sessionId: submittedDraftId,
           form,
         } satisfies StoredCreatorState));
         window.location.assign(billingUrl());
@@ -718,7 +729,8 @@ export default function CreatorStudio({
         ) {
           pendingSubmissionRef.current = null;
           window.localStorage.setItem(creatorStorageKey, JSON.stringify({
-            version: 2,
+            version: 3,
+            sessionId: submittedDraftId,
             form,
           } satisfies StoredCreatorState));
           window.location.assign(billingUrl());
@@ -731,7 +743,8 @@ export default function CreatorStudio({
         ) {
           pendingSubmissionRef.current = null;
           window.localStorage.setItem(creatorStorageKey, JSON.stringify({
-            version: 2,
+            version: 3,
+            sessionId: submittedDraftId,
             form,
           } satisfies StoredCreatorState));
         }
@@ -741,7 +754,8 @@ export default function CreatorStudio({
       if (!nextRequestId) throw new Error("Samsar did not return a render request ID.");
       pendingSubmissionRef.current = null;
       window.localStorage.setItem(creatorStorageKey, JSON.stringify({
-        version: 2,
+        version: 3,
+        sessionId: nextRequestId,
         form,
       } satisfies StoredCreatorState));
       setIsDraft(false);
@@ -761,11 +775,13 @@ export default function CreatorStudio({
   async function newDraft() {
     if (creatingDraft || generating) return;
     setCreatingDraft(true);
-    const reusableSettings = { ...form, prompt: "" };
-    window.localStorage.setItem(creatorStorageKey, JSON.stringify({
-      version: 2,
-      form: reusableSettings,
-    } satisfies StoredCreatorState));
+    const reusableSettings = {
+      ...form,
+      prompt: "",
+      // Branch depth is request-defining state. A new draft starts from the
+      // server's two-level default instead of inheriting the previous run.
+      levels: DEFAULT_BRANCHING_LEVELS,
+    };
     try {
       const response = await fetch("/api/creator/session", {
         method: "POST",
@@ -780,6 +796,11 @@ export default function CreatorStudio({
         throw new Error(result?.error || "Unable to create a new draft.");
       }
       pendingSubmissionRef.current = null;
+      window.localStorage.setItem(creatorStorageKey, JSON.stringify({
+        version: 3,
+        sessionId: result.sessionId,
+        form: reusableSettings,
+      } satisfies StoredCreatorState));
       setForm(reusableSettings);
       setStatus(null);
       setLastDetailedSnapshot(null);

@@ -93,6 +93,7 @@ test("keeps the viewer wired to the public interactive publication contract", as
   assert.match(page, /image\.decode\(\)/);
   assert.match(page, /publication\.mainVideoUrl \|\| path\.contentUrl/);
   assert.match(page, /playWithSound/);
+  assert.doesNotMatch(page, />Play with sound</);
   assert.match(page, /startPaused/);
   assert.match(page, /history\.pushState/);
   assert.match(page, /href=\{publicationPath\(publication\.id\)\}/);
@@ -100,6 +101,10 @@ test("keeps the viewer wired to the public interactive publication contract", as
   assert.doesNotMatch(page, /requestAnimationFrame/);
   assert.doesNotMatch(page, /rel="preload" as="video"/);
   assert.doesNotMatch(page, /Cinema with a pulse|Featured interactive/);
+  assert.equal(page.match(/hero-summary-line/g)?.length, 3);
+  assert.match(styles, /@keyframes hero-summary-type/);
+  assert.match(styles, /hero-summary-caret/);
+  assert.match(styles, /\.hero-summary-line > span \{ clip-path: none; animation: none; \}/);
   assert.match(route, /listInteractivePublications/);
   assert.match(detailRoute, /getInteractivePublication/);
   assert.match(watchPage, /initialPublicationId/);
@@ -191,7 +196,7 @@ test("wires Creator Studio to shared auth, unified generation, detailed polling,
   assert.match(creatorLogin, /persistAuthToken\(result\.authToken\)/);
   assert.match(creatorLogin, /Authorization: `Bearer \$\{token\}`/);
   assert.match(generateRoute, /createV2TextToInteractiveVideo/);
-  assert.match(generateRoute, /text_to_interactive_video/);
+  assert.doesNotMatch(generateRoute, /\.postV2</);
   assert.match(generateRoute, /draft_session_id/);
   assert.match(generateRoute, /currentStatus !== "INIT"/);
   assert.match(generateRoute, /already been submitted/);
@@ -212,6 +217,8 @@ test("wires Creator Studio to shared auth, unified generation, detailed polling,
   assert.match(artifactRoute, /redirect:\s*"manual"/);
   assert.doesNotMatch(artifactRoute, /endsWith\("\.cloudfront\.net"\)/);
   assert.match(studio, /CREATOR_REQUEST_STORAGE_KEY/);
+  assert.match(studio, /savedSessionId !== requestId/);
+  assert.match(studio, /levels: DEFAULT_BRANCHING_LEVELS/);
   assert.match(studio, /POLL_INTERVAL_MS/);
   assert.match(studio, /pendingSubmissionRef/);
   assert.match(studio, /Create new/);

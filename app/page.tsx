@@ -789,7 +789,6 @@ const InteractivePlayer = forwardRef<InteractivePlayerHandle, {
             <button type="button" onClick={() => void playWithSound()} aria-label={`Play ${publication.title} with sound`}>
               <Play size={34} fill="currentColor" />
             </button>
-            <span>Play with sound</span>
           </div>
         )}
 
@@ -1130,7 +1129,11 @@ export default function Home({
           )}
           <div className="hero-overlay">
             <h1>Don’t just watch. <em>Decide.</em></h1>
-            <p className="hero-summary">Stories that bend around your choices. Every path is a different cut. Every decision is yours.</p>
+            <p className="hero-summary">
+              <span className="hero-summary-line"><span>Stories that bend around your choices.</span></span>
+              <span className="hero-summary-line"><span>Every path is a different cut.</span></span>
+              <span className="hero-summary-line"><span>Every decision is yours.</span></span>
+            </p>
           </div>
         </div>
       </section>

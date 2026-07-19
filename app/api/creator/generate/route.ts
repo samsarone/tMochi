@@ -1,6 +1,5 @@
 import type {
   ExternalNarrativeVideoModel,
-  TextToInteractiveVideoCreateResponse,
   TextToInteractiveVideoImageModel,
 } from "samsar-js";
 import {
@@ -95,22 +94,19 @@ export async function POST(request: Request) {
     const requestOptions = clientRequestId
       ? { idempotencyKey: clientRequestId.slice(0, 200) }
       : undefined;
-    const result = draftSessionId
-      ? await authenticated.client.postV2<TextToInteractiveVideoCreateResponse>(
-          "text_to_interactive_video",
-          {
-            input: {
-              ...generationInput,
-              session_id: draftSessionId,
-              narrative_type: "branched",
-            },
-          },
-          requestOptions,
-        )
-      : await authenticated.client.createV2TextToInteractiveVideo(
-          generationInput,
-          requestOptions,
-        );
+    console.info("[tmochi_creator] submitting interactive video", {
+      draftSessionId: draftSessionId || null,
+      numLevels,
+      imageModel,
+      videoModel,
+    });
+    const result = await authenticated.client.createV2TextToInteractiveVideo(
+      {
+        ...generationInput,
+        ...(draftSessionId ? { session_id: draftSessionId } : {}),
+      },
+      requestOptions,
+    );
 
     return Response.json(
       {
