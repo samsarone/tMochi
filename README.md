@@ -39,6 +39,12 @@ logged-in user's shared `authToken` Bearer credential; they do not require a
 Samsar API key. Add any additional exact artifact CDN hostnames as a
 comma-separated `SAMSAR_ARTIFACT_HOSTS` value.
 
+The landing-page Create action reserves a dedicated branched interactive-video
+draft through `/v2/text_to_interactive_video/session` and navigates directly to
+`/creator/:sessionId?draft=1`. Generation submits the selected settings into
+that same session, then removes the draft marker and begins detailed-status
+polling at the canonical session URL.
+
 Creator login and registration call the Samsar `/users/login` and
 `/users/register` endpoints directly through same-origin Next.js routes; the SDK
 is not used to collect credentials. A successful response caches `authToken` in

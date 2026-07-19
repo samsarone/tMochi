@@ -24,10 +24,10 @@ import type {
   InteractivePublicationChoicePoint,
   InteractivePublicationVideoPath,
 } from "samsar-js";
-import Link from "next/link";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { flushSync } from "react-dom";
+import { TmochiLogo } from "../components/tmochi-logo";
 
 type PublicationResponse = {
   items: InteractivePublication[];
@@ -156,15 +156,6 @@ const pathForOption = (
     [...eligible].sort((a, b) => (a.ordinal ?? 999) - (b.ordinal ?? 999))[0]
   );
 };
-
-function TmochiLogo() {
-  return (
-    <span className="brand-name" aria-hidden="true">
-      <span className="brand-t-fat">t</span>
-      <span className="brand-word">Mochi</span>
-    </span>
-  );
-}
 
 function PublicationCard({
   publication,
@@ -740,6 +731,7 @@ export default function Home({ initialPublicationId }: { initialPublicationId?: 
   const [playerEntry, setPlayerEntry] = useState<PlayerEntry>(initialPublicationId ? "direct" : "internal");
   const [routeLoading, setRouteLoading] = useState(Boolean(initialPublicationId));
   const [routeError, setRouteError] = useState<string | null>(null);
+  const [creatingSession, setCreatingSession] = useState(false);
   const playerHandleRef = useRef<InteractivePlayerHandle>(null);
   const routeRequestRef = useRef(0);
 
@@ -891,15 +883,44 @@ export default function Home({ initialPublicationId }: { initialPublicationId?: 
     else returnToLanding();
   }, [playerEntry, returnToLanding]);
 
+  const openCreator = useCallback(async () => {
+    if (creatingSession) return;
+    setCreatingSession(true);
+    try {
+      const response = await fetch("/api/creator/session", { method: "POST" });
+      const result = await response.json().catch(() => null) as {
+        sessionId?: string;
+      } | null;
+      if (response.status === 401) {
+        window.location.assign("/creator");
+        return;
+      }
+      if (!response.ok || !result?.sessionId) {
+        throw new Error("Unable to create a Creator Studio session.");
+      }
+      window.location.assign(
+        `/creator/${encodeURIComponent(result.sessionId)}?draft=1`,
+      );
+    } catch {
+      window.location.assign("/creator");
+    }
+  }, [creatingSession]);
+
   return (
     <main>
       <header className="site-header">
         <a className="brand" href="#top" aria-label="tMochi home">
           <TmochiLogo />
         </a>
-        <Link className="publish-button" href="/creator">
-          <WandSparkles size={16} /> Create
-        </Link>
+        <button
+          className="publish-button"
+          type="button"
+          onClick={() => void openCreator()}
+          disabled={creatingSession}
+        >
+          {creatingSession ? <LoaderCircle size={16} /> : <WandSparkles size={16} />}
+          {creatingSession ? "Opening studio" : "Create"}
+        </button>
       </header>
 
       <section className="hero" id="top">

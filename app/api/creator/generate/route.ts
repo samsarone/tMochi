@@ -1,5 +1,6 @@
 import type {
   ExternalNarrativeVideoModel,
+  TextToInteractiveVideoCreateResponse,
   TextToInteractiveVideoImageModel,
 } from "samsar-js";
 import {
@@ -39,6 +40,7 @@ export async function POST(request: Request) {
   const imageModel = stringValue(body.image_model ?? body.imageModel) as TextToInteractiveVideoImageModel;
   const videoModel = stringValue(body.video_model ?? body.videoModel) as ExternalNarrativeVideoModel;
   const clientRequestId = stringValue(body.client_request_id ?? body.clientRequestId);
+  const draftSessionId = stringValue(body.draft_session_id ?? body.draftSessionId).slice(0, 200);
 
   if (!prompt || prompt.length > 4000) {
     return Response.json(
@@ -46,9 +48,9 @@ export async function POST(request: Request) {
       { status: 400, headers: { "Cache-Control": "no-store" } },
     );
   }
-  if (!Number.isFinite(duration) || duration < 10 || duration > 240) {
+  if (!Number.isFinite(duration) || duration < 30 || duration > 180) {
     return Response.json(
-      { error: "Duration must be between 10 and 240 seconds." },
+      { error: "Duration must be between 30 and 180 seconds." },
       { status: 400, headers: { "Cache-Control": "no-store" } },
     );
   }
@@ -72,16 +74,32 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await authenticated.client.createV2TextToInteractiveVideo(
-      {
-        prompt,
-        duration,
-        image_model: imageModel,
-        video_model: videoModel,
-        num_levels: numLevels,
-      },
-      clientRequestId ? { idempotencyKey: clientRequestId.slice(0, 200) } : undefined,
-    );
+    const generationInput = {
+      prompt,
+      duration,
+      image_model: imageModel,
+      video_model: videoModel,
+      num_levels: numLevels,
+    };
+    const requestOptions = clientRequestId
+      ? { idempotencyKey: clientRequestId.slice(0, 200) }
+      : undefined;
+    const result = draftSessionId
+      ? await authenticated.client.postV2<TextToInteractiveVideoCreateResponse>(
+          "text_to_interactive_video",
+          {
+            input: {
+              ...generationInput,
+              session_id: draftSessionId,
+              narrative_type: "branched",
+            },
+          },
+          requestOptions,
+        )
+      : await authenticated.client.createV2TextToInteractiveVideo(
+          generationInput,
+          requestOptions,
+        );
 
     return Response.json(
       {

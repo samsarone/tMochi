@@ -12,16 +12,23 @@ export const metadata: Metadata = {
 
 export default async function CreatorSessionPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ sessionId: string }>;
+  searchParams: Promise<{ draft?: string }>;
 }) {
   const { sessionId } = await params;
+  const { draft } = await searchParams;
   const normalizedSessionId = sessionId.trim().slice(0, 200);
   const redirectPath = `/creator/${encodeURIComponent(normalizedSessionId)}`;
   const user = await verifySamsarUser();
 
   return user ? (
-    <CreatorStudio initialUser={user} initialSessionId={normalizedSessionId} />
+    <CreatorStudio
+      initialUser={user}
+      initialSessionId={normalizedSessionId}
+      initialDraft={draft === "1"}
+    />
   ) : (
     <CreatorLogin redirectPath={redirectPath} />
   );

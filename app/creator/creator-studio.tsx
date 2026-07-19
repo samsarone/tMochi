@@ -7,7 +7,6 @@ import {
   CircleDollarSign,
   Download,
   Film,
-  GitBranch,
   LoaderCircle,
   LogOut,
   Play,
@@ -223,7 +222,7 @@ function normalizeStoredForm(value: unknown): CreatorForm | null {
   }
   return {
     prompt: stored.prompt.slice(0, 4000),
-    duration: Math.min(240, Math.max(10, Number(stored.duration))),
+    duration: Math.min(180, Math.max(30, Number(stored.duration))),
     imageModel: stored.imageModel as TextToInteractiveVideoImageModel,
     videoModel: stored.videoModel as ExternalNarrativeVideoModel,
     levels: Math.min(3, Math.max(1, Number(stored.levels))),
@@ -252,9 +251,11 @@ async function addArchiveResponse(zip: Zip, name: string, response: Response) {
 export default function CreatorStudio({
   initialUser,
   initialSessionId = "",
+  initialDraft = false,
 }: {
   initialUser: CreatorUser;
   initialSessionId?: string;
+  initialDraft?: boolean;
 }) {
   const router = useRouter();
   const [user, setUser] = useState(initialUser);
@@ -266,6 +267,10 @@ export default function CreatorStudio({
     levels: 2,
   });
   const [requestId, setRequestId] = useState(initialSessionId.trim());
+  const [isDraft, setIsDraft] = useState(initialDraft || !initialSessionId.trim());
+  const [renderStarted, setRenderStarted] = useState(
+    Boolean(initialSessionId.trim()) && !initialDraft,
+  );
   const [status, setStatus] = useState<CreatorStatus | null>(null);
   const [lastDetailedSnapshot, setLastDetailedSnapshot] = useState<CreatorStatus | null>(null);
   const [activePathId, setActivePathId] = useState<string | null>(null);
@@ -278,6 +283,7 @@ export default function CreatorStudio({
   const [downloadProgress, setDownloadProgress] = useState(0);
   const latestRequestRef = useRef("");
   const pendingSubmissionRef = useRef<PendingGenerationSubmission | null>(null);
+  const draftCreationRef = useRef(false);
   const storageScope = initialUser.id || initialUser.email || initialUser.username || "creator";
   const creatorStorageKey = `${CREATOR_REQUEST_STORAGE_KEY}:${storageScope}`;
 
@@ -286,13 +292,13 @@ export default function CreatorStudio({
     [form.duration, form.levels, form.videoModel],
   );
   const branching = getBranching(status) ?? getBranching(lastDetailedSnapshot);
-  const complete = isCompleted(status);
-  const failed = isFailed(status);
-  const inProgress = Boolean(requestId) && !complete && !failed;
+  const complete = renderStarted && isCompleted(status);
+  const failed = renderStarted && isFailed(status);
+  const inProgress = renderStarted && !complete && !failed;
   const progress = resolveProgress(status);
-  const stage = resolveStage(status, Boolean(requestId));
+  const stage = resolveStage(status, renderStarted);
   const creditsCharged = resolveCreditsCharged(status);
-  const balanceMayBeShort = !requestId && user.generationCredits < estimatedCredits;
+  const balanceMayBeShort = !renderStarted && user.generationCredits < estimatedCredits;
 
   const refreshUser = useCallback(async () => {
     try {
@@ -314,6 +320,38 @@ export default function CreatorStudio({
     // it locally so browser-side Samsar integrations use the same convention.
     cacheSharedCookieToken();
   }, []);
+
+  useEffect(() => {
+    if (initialSessionId.trim() || draftCreationRef.current) return;
+    draftCreationRef.current = true;
+    void (async () => {
+      try {
+        const response = await fetch("/api/creator/session", { method: "POST" });
+        const result = await response.json().catch(() => null) as {
+          sessionId?: string;
+          error?: string;
+        } | null;
+        if (response.status === 401) {
+          returnToSignIn();
+          return;
+        }
+        if (!response.ok || !result?.sessionId) {
+          throw new Error(result?.error || "Unable to create a Creator Studio session.");
+        }
+        setRequestId(result.sessionId);
+        setIsDraft(true);
+        router.replace(`/creator/${encodeURIComponent(result.sessionId)}?draft=1`, {
+          scroll: false,
+        });
+      } catch (draftError) {
+        setError(
+          draftError instanceof Error
+            ? draftError.message
+            : "Unable to create a Creator Studio session.",
+        );
+      }
+    })();
+  }, [initialSessionId, router]);
 
   useEffect(() => {
     // Remove legacy/unscoped records; the route is now the canonical session ID.
@@ -344,7 +382,7 @@ export default function CreatorStudio({
 
   useEffect(() => {
     latestRequestRef.current = requestId;
-    if (!requestId) {
+    if (!requestId || isDraft) {
       return;
     }
 
@@ -415,7 +453,7 @@ export default function CreatorStudio({
               ? nextPrompt
               : current.prompt,
           duration: Number.isFinite(Number(nextDuration))
-            ? Math.min(240, Math.max(10, Number(nextDuration)))
+            ? Math.min(180, Math.max(30, Number(nextDuration)))
             : current.duration,
           imageModel: IMAGE_MODELS.some((model) => model.value === nextImageModel)
             ? nextImageModel as TextToInteractiveVideoImageModel
@@ -469,7 +507,7 @@ export default function CreatorStudio({
       disposed = true;
       if (timer !== null) window.clearTimeout(timer);
     };
-  }, [refreshUser, requestId]);
+  }, [isDraft, refreshUser, requestId]);
 
   async function generate(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -482,7 +520,9 @@ export default function CreatorStudio({
       return;
     }
 
+    const submittedDraftId = isDraft ? requestId : "";
     setGenerating(true);
+    setRenderStarted(true);
     setError(null);
     setStatus(null);
     setLastDetailedSnapshot(null);
@@ -516,6 +556,7 @@ export default function CreatorStudio({
         body: JSON.stringify({
           ...generationPayload,
           client_request_id: clientRequestId,
+          ...(submittedDraftId ? { draft_session_id: submittedDraftId } : {}),
         }),
       });
       const result = await response.json().catch(() => null) as GenerateResponse | null;
@@ -568,6 +609,7 @@ export default function CreatorStudio({
         version: 2,
         form,
       } satisfies StoredCreatorState));
+      setIsDraft(false);
       setRequestId(nextRequestId);
       router.replace(`/creator/${encodeURIComponent(nextRequestId)}`, { scroll: false });
       if (typeof result?.creditsRemaining === "number") {
@@ -575,22 +617,37 @@ export default function CreatorStudio({
       }
     } catch (generationError) {
       setError(generationError instanceof Error ? generationError.message : "Unable to start this generation.");
+      if (submittedDraftId) setRenderStarted(false);
     } finally {
       setGenerating(false);
     }
   }
 
-  function newDraft() {
+  async function newDraft() {
     window.localStorage.removeItem(creatorStorageKey);
     pendingSubmissionRef.current = null;
-    setRequestId("");
     setStatus(null);
     setLastDetailedSnapshot(null);
     setActivePathId(null);
     setError(null);
     setPlayerOpen(false);
     setPublishOpen(false);
-    router.push("/creator");
+    setRenderStarted(false);
+    try {
+      const response = await fetch("/api/creator/session", { method: "POST" });
+      const result = await response.json().catch(() => null) as {
+        sessionId?: string;
+        error?: string;
+      } | null;
+      if (!response.ok || !result?.sessionId) {
+        throw new Error(result?.error || "Unable to create a new draft.");
+      }
+      setRequestId(result.sessionId);
+      setIsDraft(true);
+      router.push(`/creator/${encodeURIComponent(result.sessionId)}?draft=1`);
+    } catch (draftError) {
+      setError(draftError instanceof Error ? draftError.message : "Unable to create a new draft.");
+    }
   }
 
   async function signOut() {
@@ -719,15 +776,15 @@ export default function CreatorStudio({
         </div>
         <div className={styles.creditCluster}>
           <div className={`${styles.estimateCard} ${balanceMayBeShort ? styles.estimateWarning : ""}`}>
-            <span><Zap size={13} /> {requestId ? (complete ? "Credits charged" : "Charged so far") : "Estimated up to"}</span>
-            <strong>{numberFormatter.format(requestId && creditsCharged !== null ? creditsCharged : estimatedCredits)} credits</strong>
+            <span><Zap size={13} /> {renderStarted ? (complete ? "Credits charged" : "Charged so far") : "Estimated up to"}</span>
+            <strong>{numberFormatter.format(renderStarted && creditsCharged !== null ? creditsCharged : estimatedCredits)} credits</strong>
           </div>
           <div className={styles.balanceCard}>
             <span>Available balance</span>
             <strong>{numberFormatter.format(user.generationCredits)}</strong>
           </div>
           <button className={styles.purchaseButton} type="button" onClick={() => window.location.assign(billingUrl())}>
-            <WalletCards size={15} /> Purchase credits
+            <WalletCards size={15} /> <span>Purchase credits</span>
           </button>
           <div className={styles.userMenu} title={user.email || user.displayName}>
             {user.avatarUrl ? (
@@ -740,7 +797,7 @@ export default function CreatorStudio({
         </div>
       </header>
 
-      <div className={styles.studioGrid}>
+      <div className={`${styles.studioGrid} ${renderStarted ? styles.studioGridActive : styles.studioGridDraft}`}>
         <aside className={styles.controlPanel}>
           <div className={styles.panelHeading}>
             <Link href="/" className={styles.backLink}><ArrowLeft size={14} /> Public feed</Link>
@@ -769,12 +826,12 @@ export default function CreatorStudio({
                 <label>
                   <input
                     type="number"
-                    min={10}
-                    max={240}
+                    min={30}
+                    max={180}
                     value={form.duration}
                     onChange={(event) => setForm((current) => ({
                       ...current,
-                      duration: Math.min(240, Math.max(10, Number(event.target.value) || 10)),
+                      duration: Math.min(180, Math.max(30, Number(event.target.value) || 30)),
                     }))}
                     disabled={inProgress || generating}
                     aria-label="Duration in seconds"
@@ -784,16 +841,16 @@ export default function CreatorStudio({
               </div>
               <input
                 type="range"
-                min={10}
-                max={240}
+                min={30}
+                max={180}
                 step={5}
                 value={form.duration}
                 onChange={(event) => setForm((current) => ({ ...current, duration: Number(event.target.value) }))}
                 disabled={inProgress || generating}
-                style={{ "--range-progress": `${((form.duration - 10) / 230) * 100}%` } as React.CSSProperties}
+                style={{ "--range-progress": `${((form.duration - 30) / 150) * 100}%` } as React.CSSProperties}
                 aria-label="Select duration"
               />
-              <div className={styles.rangeTicks}><span>10s</span><span>4 min</span></div>
+              <div className={styles.rangeTicks}><span>30 sec</span><span>3 min</span></div>
             </div>
 
             <div className={styles.selectGrid}>
@@ -856,7 +913,7 @@ export default function CreatorStudio({
               </div>
             )}
 
-            {!requestId ? (
+            {!renderStarted ? (
               <button className={styles.generateButton} type="submit" disabled={generating || !form.prompt.trim()}>
                 {generating ? <LoaderCircle className={styles.spin} size={18} /> : <Sparkles size={18} />}
                 <span>{generating ? "Opening render graph" : "Generate interactive film"}</span>
@@ -874,16 +931,16 @@ export default function CreatorStudio({
           </form>
         </aside>
 
-        <section className={styles.previewPanel} aria-label="Interactive video preview">
+        {renderStarted && <section className={styles.previewPanel} aria-label="Interactive video preview">
           <div className={styles.previewHeader}>
             <div>
-              <span className={styles.statusDot} data-state={complete ? "complete" : failed ? "failed" : requestId ? "active" : "idle"} />
+                <span className={styles.statusDot} data-state={complete ? "complete" : failed ? "failed" : "active"} />
               <div>
                 <strong>{stage}</strong>
-                <span>{requestId ? `Session ${requestId.slice(0, 8)}…` : "No active session"}</span>
+                <span>{isDraft ? "Reserving the render session" : `Session ${requestId.slice(0, 8)}…`}</span>
               </div>
             </div>
-            {requestId && (
+            {!isDraft && requestId && (
               <div className={styles.progressReadout}>
                 <span>{polling && !complete && !failed ? "Live status" : complete ? "Ready" : failed ? "Stopped" : "Syncing"}</span>
                 <strong>{Math.round(progress)}%</strong>
@@ -891,31 +948,23 @@ export default function CreatorStudio({
             )}
           </div>
 
-          {requestId && (
+          {!isDraft && requestId && (
             <div className={styles.progressTrack} aria-label={`${Math.round(progress)} percent complete`}>
               <span style={{ width: `${progress}%` }} />
             </div>
           )}
 
           <div className={styles.previewBody}>
-            {!requestId && (
-              <div className={styles.emptyPreview}>
-                <div className={styles.emptyOrbit} aria-hidden="true">
-                  <span /><span /><span />
-                  <GitBranch size={30} />
-                </div>
-                <span className={styles.eyebrow}>Session preview</span>
-                <h2>Your story tree will grow here.</h2>
-                <p>As scenes finish, preview a random path through the live render. Once complete, play the real interactive cut before publishing.</p>
-                <div className={styles.emptySteps}>
-                  <span><strong>01</strong> Narrative</span>
-                  <span><strong>02</strong> Branches</span>
-                  <span><strong>03</strong> Interactive render</span>
-                </div>
+            {isDraft && generating && (
+              <div className={styles.renderOpening}>
+                <LoaderCircle className={styles.spin} size={24} />
+                <span className={styles.eyebrow}>Initializing render graph</span>
+                <h2>Opening your branching session.</h2>
+                <p>The configuration is locked in. The live tree will appear as soon as Samsar accepts the render.</p>
               </div>
             )}
 
-            {requestId && (
+            {!isDraft && requestId && (
               <>
                 <div className={styles.treeSection}>
                   <div className={styles.sectionLabel}>
@@ -983,7 +1032,7 @@ export default function CreatorStudio({
               </>
             )}
           </div>
-        </section>
+        </section>}
       </div>
 
       {playerOpen && status && (

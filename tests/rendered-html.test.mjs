@@ -25,7 +25,7 @@ test("server-renders the tMochi interactive cinema landing page", async () => {
   assert.match(html, /Don.t just watch\.\s*<em>Decide\.<\/em>/i);
   assert.match(html, /Interactive stories/i);
   assert.match(html, /lucide-wand-sparkles/i);
-  assert.match(html, /> Create<\/a>/i);
+  assert.match(html, />Create<\/button>/i);
   assert.doesNotMatch(html, /<nav aria-label="Main navigation"/i);
   assert.match(html, /brand-t-fat/i);
   assert.doesNotMatch(html, /brand-t-notch/i);
@@ -118,6 +118,7 @@ test("wires Creator Studio to shared auth, unified generation, detailed polling,
     loginRoute,
     registerRoute,
     sessionRoute,
+    creatorSessionRoute,
     generateRoute,
     statusRoute,
     publishRoute,
@@ -138,6 +139,7 @@ test("wires Creator Studio to shared auth, unified generation, detailed polling,
     readFile(new URL("../app/api/auth/login/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/auth/register/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/auth/session/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/creator/session/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/creator/generate/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/creator/status/[requestId]/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/creator/publish/route.ts", import.meta.url), "utf8"),
@@ -171,7 +173,11 @@ test("wires Creator Studio to shared auth, unified generation, detailed polling,
   assert.match(creatorLogin, /persistAuthToken\(result\.authToken\)/);
   assert.match(creatorLogin, /Authorization: `Bearer \$\{token\}`/);
   assert.match(generateRoute, /createV2TextToInteractiveVideo/);
+  assert.match(generateRoute, /text_to_interactive_video/);
+  assert.match(generateRoute, /draft_session_id/);
+  assert.match(generateRoute, /duration < 30 \|\| duration > 180/);
   assert.match(generateRoute, /numLevels < 1 \|\| numLevels > 3/);
+  assert.match(creatorSessionRoute, /createBlankBranchedSession/);
   assert.match(statusRoute, /getV2StatusDetailed/);
   assert.match(publishRoute, /publishPublication/);
   assert.match(publishRoute, /profile\.username/);
@@ -182,6 +188,9 @@ test("wires Creator Studio to shared auth, unified generation, detailed polling,
   assert.match(studio, /POLL_INTERVAL_MS/);
   assert.match(studio, /pendingSubmissionRef/);
   assert.match(studio, /router\.replace\(`\/creator\/\$\{encodeURIComponent\(nextRequestId\)\}`/);
+  assert.match(studio, /renderStarted && <section/);
+  assert.match(studio, /min=\{30\}/);
+  assert.match(studio, /max=\{180\}/);
   assert.match(studio, /ZipPassThrough/);
   assert.doesNotMatch(studio, /zipSync/);
   assert.match(studio, /Download artifacts/);

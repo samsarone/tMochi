@@ -50,6 +50,8 @@ main { min-height: 100vh; background: radial-gradient(circle at 50% -15%, rgba(1
 .brand-word { display: inline-block; color: var(--text); font-family: var(--font-sans),sans-serif; font-size: 1em; font-style: normal; font-weight: 560; letter-spacing: -.05em; }
 .publish-button { margin-left: auto; border: 1px solid rgba(197,255,92,.28); background: transparent; color: var(--acid); height: 37px; padding: 0 15px; border-radius: 999px; display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: .25s ease; }
 .publish-button:hover { background: var(--acid); color: #11150b; box-shadow: 0 0 28px rgba(197,255,92,.2); }
+.publish-button:disabled { cursor: wait; opacity: .68; }
+.publish-button:disabled svg { animation: spin 1s linear infinite; }
 
 .hero { width: 100%; height: 100svh; min-height: 620px; margin: 0; padding: 0; position: relative; overflow: hidden; }
 .eyebrow { font: 600 10px/1 var(--font-mono); color: var(--acid); text-transform: uppercase; letter-spacing: .19em; }
