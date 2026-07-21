@@ -135,10 +135,6 @@ export default function PublishDialog({
     }
     const categoryList = parseTaxonomyList(categories, 3);
     const topicList = parseTaxonomyList(topics, 8);
-    if (categoryList.length === 0 || topicList.length === 0) {
-      setError("Add at least one category and one topic before publishing.");
-      return;
-    }
     setSubmitting(true);
     setError(null);
     try {
@@ -238,24 +234,22 @@ export default function PublishDialog({
             </label>
             <div className={styles.taxonomyFields}>
               <label>
-                <span>Categories</span>
+                <span>Categories (optional)</span>
                 <input
                   value={categories}
                   onChange={(event) => setCategories(event.target.value)}
                   maxLength={160}
                   disabled={busy}
-                  required
                 />
                 <small>Up to 3, comma separated</small>
               </label>
               <label>
-                <span>Topics</span>
+                <span>Topics (optional)</span>
                 <input
                   value={topics}
                   onChange={(event) => setTopics(event.target.value)}
                   maxLength={320}
                   disabled={busy}
-                  required
                 />
                 <small>Up to 8, comma separated</small>
               </label>

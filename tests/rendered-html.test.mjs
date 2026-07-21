@@ -27,8 +27,8 @@ test("server-renders the TMochiLearn interactive learning landing page", async (
   assert.doesNotMatch(html, /Learn every path|Understand deeply/i);
   assert.match(html, /lucide-wand-sparkles/i);
   assert.match(html, />Create<\/button>/i);
-  assert.match(html, /<nav[^>]*aria-label="Main navigation"/i);
-  assert.match(html, /href="\/learn"[^>]*>Explore<\/a>/i);
+  assert.doesNotMatch(html, /<nav[^>]*aria-label="Main navigation"/i);
+  assert.doesNotMatch(html, /href="\/learn"[^>]*>Explore<\/a>/i);
   assert.match(html, /brand-cat-mark/i);
   assert.match(html, /tmochi-learn-logo\.png/i);
   assert.match(html, /brand-word[^>]*>TMochiLearn<\/span>/i);
@@ -147,7 +147,7 @@ test("keeps the viewer wired to the public interactive publication contract", as
   assert.match(page, /variant="featured"/);
   assert.match(page, /descriptionExpanded/);
   assert.match(page, /is-idle-playing/);
-  assert.match(page, /Learn Topics\./);
+  assert.match(page, /Learn by <em>choosing\.<\/em>/);
   assert.match(page, /Every alternative outcome, explained\./);
   assert.match(page, /Every path, followed\./);
   assert.match(page, /Every decision builds deeper understanding\./);
@@ -178,7 +178,7 @@ test("keeps the viewer wired to the public interactive publication contract", as
   assert.match(styles, /\.featured-poster-overlay \{ display: none; \}/);
   assert.match(styles, /\.film-card-skeleton-copy/);
   assert.match(styles, /\.featured-media \{[^}]*aspect-ratio: 16\/9/);
-  assert.match(styles, /\.site-header \.site-nav \{ margin-left: 8px/);
+  assert.doesNotMatch(styles, /\.site-nav/);
   assert.match(styles, /\.player-shell\.is-standard\.is-idle-playing/);
   assert.match(styles, /is-idle-playing \.watch-header \{ opacity: \.46/);
   assert.match(styles, /is-idle-playing \.branch-map,[^}]*opacity: \.34/);
@@ -302,6 +302,7 @@ test("wires Creator Studio to shared auth, unified generation, detailed polling,
   assert.match(publishRoute, /profile\.username/);
   assert.match(publishRoute, /categories/);
   assert.match(publishRoute, /topics/);
+  assert.doesNotMatch(publishRoute, /Add at least one category and one topic/);
   assert.match(generateMetaRoute, /interactive_publication\/generate_meta/);
   assert.match(generateMetaRoute, /clientRequestId\.length > 200/);
   assert.match(generateMetaRoute, /sessionId\.length > 200/);
@@ -362,7 +363,9 @@ test("wires Creator Studio to shared auth, unified generation, detailed polling,
   assert.match(publishDialog, /response\.status === 402/);
   assert.match(publishDialog, /setTitle\(generatedTitle\.slice\(0, 160\)\)/);
   assert.match(publishDialog, /setDescription\(generatedDescription\.slice\(0, 2000\)\)/);
-  assert.match(publishDialog, /Add at least one category and one topic/);
+  assert.doesNotMatch(publishDialog, /Add at least one category and one topic/);
+  assert.match(publishDialog, /Categories \(optional\)/);
+  assert.match(publishDialog, /Topics \(optional\)/);
   assert.match(publishDialog, /categoryList/);
   assert.match(publishDialog, /topicList/);
   assert.match(publishDialog, /onCreditsRemaining/);

@@ -224,7 +224,7 @@ function FeaturedCtaCopy({
 }) {
   return (
     <span className={className} aria-hidden={ariaHidden}>
-      <strong className="featured-poster-heading">Learn Topics. <em>Deeply</em></strong>
+      <strong className="featured-poster-heading">Learn by <em>choosing.</em></strong>
       {showSummary && (
         <span className="hero-summary featured-poster-summary">
           <span className="hero-summary-line"><span>Every alternative outcome, explained.</span></span>
@@ -1434,10 +1434,6 @@ const InteractivePlayer = forwardRef<InteractivePlayerHandle, {
           >
             <TMochiLearnLogo />
           </Link>
-          <nav className="site-nav" aria-label="Main navigation">
-            <Link href="/" aria-current="page">Watch</Link>
-            <Link href="/learn">Explore</Link>
-          </nav>
           <Link className="publish-button" href="/creator">
             <WandSparkles size={16} />
             Create
@@ -1965,10 +1961,6 @@ export default function Home({
         <Link className="brand" href={isLearn ? "/" : "#top"} aria-label="TMochiLearn home">
           <TMochiLearnLogo />
         </Link>
-        <nav className="site-nav" aria-label="Main navigation">
-          <Link href="/" aria-current={!isLearn ? "page" : undefined}>Watch</Link>
-          <Link href="/learn" aria-current={isLearn ? "page" : undefined}>Explore</Link>
-        </nav>
         <button
           className="publish-button"
           type="button"

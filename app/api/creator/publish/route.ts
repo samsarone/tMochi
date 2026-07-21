@@ -61,13 +61,6 @@ export async function POST(request: Request) {
       { status: 400, headers: { "Cache-Control": "no-store" } },
     );
   }
-  if (categories.length === 0 || topics.length === 0) {
-    return Response.json(
-      { error: "Add at least one category and one topic before publishing." },
-      { status: 400, headers: { "Cache-Control": "no-store" } },
-    );
-  }
-
   try {
     const result = await authenticated.client.publishPublication({
       session_id: sessionId,

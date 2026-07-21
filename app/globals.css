@@ -49,10 +49,6 @@ main { min-height: 100vh; background: radial-gradient(circle at 50% -15%, rgba(1
 .brand-name { display: inline-flex; align-items: center; gap: .38em; line-height: 1; filter: drop-shadow(0 1px 5px rgba(0,0,0,.72)); }
 .brand-cat-mark { display: block; width: 1.55em; height: 1.55em; flex: 0 0 auto; border-radius: 28%; object-fit: cover; }
 .brand-word { display: inline-block; color: var(--text); font-family: var(--font-sans),sans-serif; font-size: 1em; font-style: normal; font-weight: 560; letter-spacing: -.05em; }
-.site-nav { display: flex; align-items: center; gap: 3px; margin-left: 22px; padding: 3px; border: 1px solid rgba(235,255,221,.09); border-radius: 999px; background: rgba(255,255,255,.025); }
-.site-nav a { min-width: 55px; height: 25px; display: grid; place-items: center; border-radius: 999px; color: #8e988a; font-size: 9px; font-weight: 600; letter-spacing: .015em; transition: .2s ease; }
-.site-nav a:hover { color: var(--text); }
-.site-nav a[aria-current="page"] { color: var(--acid); background: rgba(197,255,92,.075); box-shadow: inset 0 0 0 1px rgba(197,255,92,.13); }
 .publish-button { margin-left: auto; border: 1px solid rgba(197,255,92,.24); background: rgba(197,255,92,.025); color: var(--acid); height: 32px; padding: 0 13px; border-radius: 999px; display: flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 600; cursor: pointer; transition: .25s ease; }
 .publish-button:hover { background: var(--acid); color: #11150b; box-shadow: 0 0 28px rgba(197,255,92,.2); }
 .publish-button:disabled { cursor: wait; opacity: .68; }
@@ -312,8 +308,6 @@ footer > span { justify-self: end; font: 9px var(--font-mono); text-transform: u
   .site-header { height: 66px; padding: 0 17px; }
   .site-header .brand-word,.watch-header .brand-word { display: none; }
   .publish-button { height: 34px; padding: 0 12px; font-size: 11px; }
-  .site-nav { margin-left: auto; margin-right: 8px; }
-  .site-nav a { min-width: 51px; height: 27px; font-size: 9px; }
   .learn-site-header .publish-button { width: 34px; padding: 0; justify-content: center; font-size: 0; }
   .hero { height: 100svh; min-height: 540px; padding: 0; }
   .hero-overlay { padding: max(92px,calc(76px + env(safe-area-inset-top))) 14px max(28px,calc(20px + env(safe-area-inset-bottom))); }
@@ -645,7 +639,6 @@ footer > span { justify-self: end; font: 9px var(--font-mono); text-transform: u
 @media (max-width: 760px), (max-width: 1024px) and (pointer: coarse), (max-width: 1024px) and (max-height: 600px) {
   .site-header { height: 56px; }
   .watch-header { height: 56px; }
-  .site-header .site-nav { margin-left: 8px; margin-right: 0; }
   .featured-landing { width: calc(100% - 24px); min-height: 0; margin: 10px auto 14px; display: block; }
   .featured-media { width: 100%; aspect-ratio: 16/9; border-radius: 14px; background: #000; }
   .featured-landing-panel { display: none; }
