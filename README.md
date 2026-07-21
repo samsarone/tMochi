@@ -1,76 +1,93 @@
-# TMochiLearn 🎬
+<p align="center">
+  <img src="public/tmochi-learn-logo.png" alt="TMochiLearn logo" width="180" />
+</p>
 
-[![Tests](https://github.com/samsarone/TmochiLearn/actions/workflows/ci.yml/badge.svg)](https://github.com/samsarone/TmochiLearn/actions/workflows/ci.yml)
+<h1 align="center">TMochiLearn</h1>
 
-**The world’s first and only interactive cinema creator.**
+<p align="center"><strong>Interactive educational videos that adapt to every choice.</strong></p>
 
-Initial implementation in response to Fal x Sequoia hackathon.
+<p align="center">
+  <a href="https://github.com/samsarone/TmochiLearn/actions/workflows/ci.yml"><img src="https://github.com/samsarone/TmochiLearn/actions/workflows/ci.yml/badge.svg" alt="Tests" /></a>
+</p>
 
-TMochiLearn turns a single idea into a living film with choices, alternate scenes,
-and endings shaped by the audience. Describe the story you want to tell, direct
-how far it can branch, and watch an entire cinematic story tree come alive.
+TMochiLearn turns a single topic into an interactive lesson with choices,
+alternate explanations, and outcomes shaped by the learner. Describe what you
+want to teach, choose how deeply it should branch, and generate a complete
+learning-path tree.
 
-This is not a video with buttons added afterward. Every path is part of one
-connected movie, built to let viewers step inside the story and decide what
-happens next.
+Every path belongs to one connected learning experience. Learners can explore
+different approaches, see the consequences of each choice, and build a deeper
+understanding of educational and technical subjects.
 
-## Don’t just watch. Decide.
+## Demo
 
-A TMochiLearn film moves like modern streaming cinema—until the story reaches a
-moment that belongs to the viewer.
+[![Watch the TMochiLearn app demo](https://img.youtube.com/vi/uZgqEkFwF6I/hqdefault.jpg)](https://www.youtube.com/watch?v=uZgqEkFwF6I)
+
+*App demo screencast created with Codex using GPT 5.6 Ultra settings.*
+
+## Don’t just watch. Explore.
+
+A TMochiLearn lesson presents clear, focused video segments and lets the learner
+choose what to examine next.
 
 - A subtle **Choose the next path** cue appears before each decision.
-- Cinematic branch thumbnails fade naturally into the scene.
+- Learning-path previews transition naturally from the current topic.
 - Every choice continues from the same moment without losing sound or playback
   settings.
-- Multi-level stories remember the path already taken.
-- Shared film links open directly in the interactive player.
-- The public cinema feed makes published stories easy to discover and replay.
+- Multi-level lessons remember the path already taken.
+- Shared lesson links open directly in the interactive player.
+- The public learning library makes published lessons easy to discover and replay.
 
-## One premise. Every possible path.
+## One topic. Every learning path.
 
-The Creator Studio is designed for storytellers, not editing timelines.
+The Creator Studio is designed for educators, trainers, and technical creators.
 
-1. **Describe your movie** — start with a premise, character, conflict, or
-   impossible choice.
-2. **Choose the depth** — create a focused fork or a story tree with up to three
+1. **Describe your lesson** — start with a concept, process, skill, or scenario
+   learners should understand.
+2. **Choose the depth** — create a focused fork or a learning tree with up to three
    levels of decisions.
-3. **Watch the world form** — follow live generation progress and see the branch
+3. **Build the lesson** — follow live generation progress and see the learning-path
    map fill with scenes.
-4. **Preview every route** — explore random paths or direct the story choice by
+4. **Preview every route** — explore random paths or review the lesson choice by
    choice.
-5. **Name the transmission** — write the public details yourself or let TMochiLearn
+5. **Describe the lesson** — write the public details yourself or let TMochiLearn
    generate a title and description.
-6. **Publish the experience** — release it to the TMochiLearn cinema feed or download
-   the complete artifact package.
+6. **Publish the experience** — release it to the TMochiLearn learning library or
+   download the complete artifact package.
 
-## Made for interactive storytellers
+## Made for interactive learning
 
-- **Prompt-to-interactive-film creation** powered by Samsar
-- **One-to-three-level story trees** with distinct branches and endings
+- **Prompt-to-interactive-lesson creation** powered by Samsar
+- **One-to-three-level learning trees** with distinct branches and outcomes
 - **Live branch topology** that shows the structure as it is created
-- **Resumable sessions** so a film remains available at its own Creator URL
+- **Resumable sessions** so a lesson remains available at its own Creator URL
 - **Interactive previews** with media-accurate decision points
-- **Smart publishing metadata** generated from the completed movie
+- **Smart publishing metadata** generated from the completed lesson
 - **Transparent credit estimates and balances** throughout creation
 - **Downloadable production artifacts** for every rendered path
-- **A cinematic public library** with search, featured stories, and shareable
+- **A public learning library** with search, featured lessons, and shareable
   watch links
 
-## A cinema with more than one ending
+## Learning with more than one path
 
-TMochiLearn is built around a simple belief: audiences can be more than spectators.
-They can protect a character, follow the signal, open the forbidden door, or
-walk away—and the film should be ready for every decision.
+TMochiLearn is built around a simple belief: learners understand more when they
+actively explore. They can test an assumption, compare an approach, troubleshoot
+a system, or revisit a concept—and the lesson should respond to every decision.
 
-The result is a new format between cinema and storytelling: authored enough to
-feel intentional, alive enough to surprise even its creator.
+The result is an adaptive format for educational and technical content: structured
+enough to teach intentionally and flexible enough to support curiosity.
 
 ## Powered by Samsar
 
-TMochiLearn uses Samsar to create, render, resume, and publish branching films.
+TMochiLearn uses Samsar to create, render, resume, and publish branching lessons.
 Existing Samsar accounts work in the Creator Studio, and completed interactive
-publications flow into the same public catalog used by the viewer.
+publications flow into the same public catalog used by learners.
+
+## Development
+
+This project was entirely built with [OpenAI Codex](https://openai.com/codex/)
+using GPT 5.6 Sol in High and Ultra settings, with manual QA, verification, and
+code debugging.
 
 ## For contributors
 
@@ -89,8 +106,9 @@ npm test
 ```
 
 `npm test` builds the Cloudflare Worker version and runs the existing Node.js
-integration suite against the rendered cinema, shared player routes, Creator
-authentication, branching contracts, generation flow, and publishing tools.
+integration suite against the rendered learning experience, shared player routes,
+Creator authentication, branching contracts, generation flow, and publishing
+tools.
 
 <details>
 <summary>Configuration and deployment notes</summary>
@@ -109,7 +127,7 @@ To preview the local UI against the live production publication catalog, run:
 npm run dev:production-catalog
 ```
 
-This only reads the public production catalog for the viewer. Creator actions
+This only reads the public production catalog for learners. Creator actions
 still require a signed-in Samsar session.
 
 For Vercel, use the Next.js framework preset and the standard `npm run build`
@@ -120,4 +138,4 @@ output. The optional Cloudflare Worker workflow is available through
 
 ---
 
-**Make a movie. Build every choice. Let the audience decide.**
+*This version was created in fulfillment of the [OpenAI Build Week Devpost hackathon](https://openai.devpost.com/).*
