@@ -78,7 +78,7 @@ export async function POST(request: Request) {
       creator_handle:
         (typeof profile.username === "string" && profile.username.trim()) ||
         (typeof profile.displayName === "string" && profile.displayName.trim()) ||
-        "TmochiExplore creator",
+        "TMochiLearn creator",
     });
     return Response.json(result.data, {
       status: result.status,

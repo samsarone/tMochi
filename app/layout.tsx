@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const host = incoming.get("x-forwarded-host") || incoming.get("host") || "localhost:3001";
   const protocol = incoming.get("x-forwarded-proto") || (host.startsWith("localhost") ? "http" : "https");
   const origin = `${protocol}://${host}`;
-  const title = "TmochiExplore — Interactive Cinema";
+  const title = "TMochiLearn — Interactive Cinema";
   const description = "Watch stories that change with every choice. A futuristic interactive film experience powered by Samsar.";
 
   return {
@@ -27,8 +27,8 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       type: "website",
       url: origin,
-      siteName: "TmochiExplore",
-      images: [{ url: `${origin}/og.png`, width: 1733, height: 907, alt: "TmochiExplore — Don’t just watch. Decide." }],
+      siteName: "TMochiLearn",
+      images: [{ url: `${origin}/og.png`, width: 1733, height: 907, alt: "TMochiLearn — Don’t just watch. Decide." }],
     },
     twitter: {
       card: "summary_large_image",

@@ -145,7 +145,7 @@ export default function CreatorLogin({ redirectPath = "/creator" }: { redirectPa
     <main className={styles.loginShell}>
       <div className={styles.loginGlow} aria-hidden="true" />
       <Link className={styles.loginBack} href="/">
-        <ArrowLeft size={15} /> Back to TmochiExplore
+        <ArrowLeft size={15} /> Back to TMochiLearn
       </Link>
 
       <section className={styles.loginPanel}>
@@ -162,8 +162,8 @@ export default function CreatorLogin({ redirectPath = "/creator" }: { redirectPa
         </h1>
         <p className={styles.loginIntro}>
           {view === "login"
-            ? "Use the same Samsar account you use on samsar.one. Your shared secure session will also work here on TmochiExplore."
-            : "Create credentials compatible with Samsar, the Gallery, and TmochiExplore Creator Studio."}
+            ? "Use the same Samsar account you use on samsar.one. Your shared secure session will also work here on TMochiLearn."
+            : "Create credentials compatible with Samsar, the Gallery, and TMochiLearn Creator Studio."}
         </p>
 
         <div className={styles.authTabs} role="tablist" aria-label="Authentication mode">

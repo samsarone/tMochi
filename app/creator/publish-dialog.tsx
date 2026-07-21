@@ -187,7 +187,7 @@ export default function PublishDialog({
             <span><Check size={24} /></span>
             <p className={styles.eyebrow}>Transmission live</p>
             <h2 id="publish-title">Your interactive film is published.</h2>
-            <p>It now appears in the public TmochiExplore feed and has its own shareable player.</p>
+            <p>It now appears in the public TMochiLearn feed and has its own shareable player.</p>
             <a className={styles.primaryButton} href={`/watch/${encodeURIComponent(publicationId)}`}>
               Watch published film <ArrowRight size={16} />
             </a>
@@ -196,7 +196,7 @@ export default function PublishDialog({
           <form onSubmit={publish}>
             <div className={styles.dialogHeading}>
               <div>
-                <span className={styles.eyebrow}>Publish to TmochiExplore</span>
+                <span className={styles.eyebrow}>Publish to TMochiLearn</span>
                 <h2 id="publish-title">Name this transmission.</h2>
                 <p className={styles.dialogIntro}>Add the public details viewers will see in the feed.</p>
               </div>

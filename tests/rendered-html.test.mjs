@@ -14,42 +14,42 @@ async function render(pathname = "/") {
   );
 }
 
-test("server-renders the TmochiExplore interactive cinema landing page", async () => {
+test("server-renders the TMochiLearn interactive cinema landing page", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>TmochiExplore — Interactive Cinema<\/title>/i);
+  assert.match(html, /<title>TMochiLearn — Interactive Cinema<\/title>/i);
   assert.match(html, /Don.t just watch/i);
   assert.match(html, /Don.t just watch\.\s*<em>Decide\.<\/em>/i);
   assert.match(html, /Interactive stories/i);
   assert.match(html, /lucide-wand-sparkles/i);
   assert.match(html, />Create<\/button>/i);
   assert.match(html, /<nav[^>]*aria-label="Main navigation"/i);
-  assert.match(html, /href="\/explore"/i);
+  assert.match(html, /href="\/learn"[^>]*>Explore<\/a>/i);
   assert.match(html, /brand-cat-mark/i);
-  assert.match(html, /tmochi-explore-logo\.png/i);
-  assert.match(html, /brand-word[^>]*>TmochiExplore<\/span>/i);
+  assert.match(html, /tmochi-learn-logo\.png/i);
+  assert.match(html, /brand-word[^>]*>TMochiLearn<\/span>/i);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/i);
 });
 
-test("server-renders the education-only Explore catalog", async () => {
-  const response = await render("/explore");
+test("server-renders the education-only Learn catalog", async () => {
+  const response = await render("/learn");
   assert.equal(response.status, 200);
 
   const html = await response.text();
   assert.match(html, /Choose what you/i);
-  assert.match(html, /explore next/i);
+  assert.match(html, /learn next/i);
   assert.match(html, /Interactive learning library/i);
   assert.match(html, /Educational interactive content/i);
-  assert.match(html, /Explore topics/i);
+  assert.match(html, /Browse topics/i);
 });
 
-test("redirects legacy Learn URLs to Explore", async () => {
-  const response = await render("/learn");
+test("redirects legacy Explore URLs to Learn", async () => {
+  const response = await render("/explore");
   assert.equal(response.status, 308);
-  assert.equal(new URL(response.headers.get("location")).pathname, "/explore");
+  assert.equal(new URL(response.headers.get("location")).pathname, "/learn");
 });
 
 test("server-renders shared player URLs in a paused loading state", async () => {

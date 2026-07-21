@@ -6,8 +6,8 @@ import CreatorStudio from "./creator-studio";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Creator Studio — TmochiExplore",
-  description: "Create, preview, download, and publish branching interactive films with TmochiExplore.",
+  title: "Creator Studio — TMochiLearn",
+  description: "Create, preview, download, and publish branching interactive films with TMochiLearn.",
 };
 
 export default async function CreatorPage() {

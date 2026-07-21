@@ -899,7 +899,7 @@ export default function CreatorStudio({
           zip,
           "README.txt",
           strToU8(
-            "TmochiExplore interactive video artifacts\n\n" +
+            "TMochiLearn interactive video artifacts\n\n" +
             "Start with manifest/branching.json. All switch times and durations use media-relative seconds.\n" +
             "manifest/artifact-index.json maps every remote resource to its packaged media file.\n",
           ),
@@ -916,7 +916,7 @@ export default function CreatorStudio({
       const href = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = href;
-      anchor.download = `tmochi-explore-${sanitizeFileName(requestId)}-artifacts.zip`;
+      anchor.download = `tmochi-learn-${sanitizeFileName(requestId)}-artifacts.zip`;
       document.body.appendChild(anchor);
       anchor.click();
       anchor.remove();
@@ -938,7 +938,7 @@ export default function CreatorStudio({
     <main className={styles.studioShell}>
       <header className={styles.studioHeader}>
         <div className={styles.headerIdentity}>
-          <Link className={styles.headerBrand} href="/" aria-label="TmochiExplore home"><CreatorBrand /></Link>
+          <Link className={styles.headerBrand} href="/" aria-label="TMochiLearn home"><CreatorBrand /></Link>
           <span className={styles.headerDivider} />
           <div>
             <strong>Creator Studio</strong>
@@ -976,7 +976,7 @@ export default function CreatorStudio({
           <div className={styles.panelHeading}>
             <span className={styles.eyebrow}>Build a new transmission</span>
             <h1>Direct every <em>possible path.</em></h1>
-            <p>Describe one premise. TmochiExplore builds its story tree, renders every branch, and keeps the timing connected.</p>
+            <p>Describe one premise. TMochiLearn builds its story tree, renders every branch, and keeps the timing connected.</p>
           </div>
 
           <form className={styles.creatorForm} onSubmit={generate}>

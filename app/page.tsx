@@ -29,7 +29,7 @@ import Link from "next/link";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { flushSync } from "react-dom";
-import { TmochiExploreLogo } from "../components/tmochi-explore-logo";
+import { TMochiLearnLogo } from "../components/tmochi-learn-logo";
 
 type PublicationResponse = {
   items: CatalogPublication[];
@@ -108,7 +108,7 @@ const demoPublication: CatalogPublication = {
   tags: ["sci-fi", "prototype"],
   categories: ["Film & Animation"],
   topics: ["interactive storytelling", "science fiction"],
-  creatorHandle: "TmochiExplore",
+  creatorHandle: "TMochiLearn",
   datePublished: "2026-07-19T00:00:00.000Z",
   mainVideoUrl:
     "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
@@ -178,16 +178,16 @@ const demoPublication: CatalogPublication = {
   },
 };
 
-const exploreDemoPublication: CatalogPublication = {
+const learnDemoPublication: CatalogPublication = {
   ...demoPublication,
-  id: "tmochi-explore-demo",
+  id: "tmochi-learn-demo",
   title: "Inside a Living Cell",
   description:
     "Choose a route through the cell and discover how its systems keep life in motion.",
   tags: ["biology", "cells", "prototype"],
   categories: ["Education", "Science & Technology"],
   topics: ["cell biology", "life sciences", "human body"],
-  creatorHandle: "TmochiExplore",
+  creatorHandle: "TMochiLearn",
 };
 
 const formatTime = (seconds: number) => {
@@ -262,7 +262,7 @@ function PublicationCard({
   );
 }
 
-function ExplorePublicationCard({
+function LearnPublicationCard({
   publication,
   onPlay,
   featured = false,
@@ -1084,7 +1084,7 @@ export default function Home({
 }: {
   initialPublicationId?: string;
   initialPublication?: InteractivePublication;
-  catalogMode?: "home" | "explore";
+  catalogMode?: "home" | "learn";
 }) {
   const [response, setResponse] = useState<PublicationResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -1099,7 +1099,7 @@ export default function Home({
   const [creatingSession, setCreatingSession] = useState(false);
   const playerHandleRef = useRef<InteractivePlayerHandle>(null);
   const routeRequestRef = useRef(0);
-  const isExplore = catalogMode === "explore";
+  const isLearn = catalogMode === "learn";
 
   const clearPlayerRoute = useCallback(() => {
     routeRequestRef.current += 1;
@@ -1113,8 +1113,8 @@ export default function Home({
 
   const returnToLanding = useCallback(() => {
     clearPlayerRoute();
-    window.history.replaceState(null, "", isExplore ? "/explore" : "/");
-  }, [clearPlayerRoute, isExplore]);
+    window.history.replaceState(null, "", isLearn ? "/learn" : "/");
+  }, [clearPlayerRoute, isLearn]);
 
   const loadPublicationRoute = useCallback(async (publicationId: string) => {
     const requestId = ++routeRequestRef.current;
@@ -1151,8 +1151,8 @@ export default function Home({
     if (cursor) setLoadingMore(true);
     else setLoading(true);
     try {
-      const query = new URLSearchParams({ limit: isExplore ? "200" : "24" });
-      if (isExplore) query.set("category", "Education");
+      const query = new URLSearchParams({ limit: isLearn ? "200" : "24" });
+      if (isLearn) query.set("category", "Education");
       if (cursor) query.set("cursor", cursor);
       const request = await fetch(`/api/interactive-publications?${query}`);
       if (!request.ok) throw new Error("Catalog request failed");
@@ -1169,7 +1169,7 @@ export default function Home({
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [isExplore]);
+  }, [isLearn]);
 
   useEffect(() => {
     let active = true;
@@ -1205,14 +1205,14 @@ export default function Home({
   }, [clearPlayerRoute, initialPublication?.id, initialPublicationId, loadPublicationRoute]);
 
   const livePublications = response?.items ?? [];
-  const eligiblePublications = isExplore
+  const eligiblePublications = isLearn
     ? livePublications.filter((publication) =>
         publication.categories?.some((category) => category.trim().toLowerCase() === "education"),
       )
     : livePublications;
   const isPrototype = !loading && !error && eligiblePublications.length === 0;
   const publications = isPrototype
-    ? [isExplore ? exploreDemoPublication : demoPublication]
+    ? [isLearn ? learnDemoPublication : demoPublication]
     : eligiblePublications;
   const topicCounts = (() => {
     const counts = new Map<string, number>();
@@ -1299,14 +1299,14 @@ export default function Home({
   }, [creatingSession]);
 
   return (
-    <main className={isExplore ? "learn-page" : undefined}>
-      <header className={`site-header ${isExplore ? "learn-site-header" : ""}`}>
-        <Link className="brand" href={isExplore ? "/" : "#top"} aria-label="TmochiExplore home">
-          <TmochiExploreLogo />
+    <main className={isLearn ? "learn-page" : undefined}>
+      <header className={`site-header ${isLearn ? "learn-site-header" : ""}`}>
+        <Link className="brand" href={isLearn ? "/" : "#top"} aria-label="TMochiLearn home">
+          <TMochiLearnLogo />
         </Link>
         <nav className="site-nav" aria-label="Main navigation">
-          <Link href="/" aria-current={!isExplore ? "page" : undefined}>Watch</Link>
-          <Link href="/explore" aria-current={isExplore ? "page" : undefined}>Explore</Link>
+          <Link href="/" aria-current={!isLearn ? "page" : undefined}>Watch</Link>
+          <Link href="/learn" aria-current={isLearn ? "page" : undefined}>Explore</Link>
         </nav>
         <button
           className="publish-button"
@@ -1319,23 +1319,23 @@ export default function Home({
         </button>
       </header>
 
-      {isExplore ? (
+      {isLearn ? (
         <>
           <section className="learn-hero" id="top">
             <div>
               <span className="eyebrow"><BookOpen size={13} /> Interactive learning library</span>
-              <h1>Choose what you<br /><em>explore next.</em></h1>
-              <p>Explore lessons that respond to your decisions. Every choice opens a new way to understand the subject.</p>
+              <h1>Choose what you<br /><em>learn next.</em></h1>
+              <p>Discover lessons that respond to your decisions. Every choice opens a new way to understand the subject.</p>
             </div>
             <div className="learn-hero-mark" aria-hidden="true">
-              <span>EXPLORE</span>
+              <span>LEARN</span>
               <GitFork size={27} />
             </div>
           </section>
 
           <section className="learn-library" aria-label="Educational interactive content">
             <aside className="learn-sidebar">
-              <span className="learn-sidebar-label">Explore topics</span>
+              <span className="learn-sidebar-label">Browse topics</span>
               <button
                 className={!selectedTopic ? "is-active" : undefined}
                 type="button"
@@ -1376,7 +1376,7 @@ export default function Home({
               {isPrototype && !loading && !error && (
                 <div className="prototype-note learn-prototype-note">
                   <span><Sparkles size={15} /></span>
-                  <p><strong>Explore is ready for its first lesson.</strong> This clearly marked preview demonstrates the educational catalog and interactive player.</p>
+                  <p><strong>Learn is ready for its first lesson.</strong> This clearly marked preview demonstrates the educational catalog and interactive player.</p>
                 </div>
               )}
 
@@ -1397,7 +1397,7 @@ export default function Home({
 
               {!loading && !error && featured && !hasSearch && !selectedTopic && (
                 <div className="learn-feature">
-                  <ExplorePublicationCard publication={featured} onPlay={openPlayer} featured />
+                  <LearnPublicationCard publication={featured} onPlay={openPlayer} featured />
                 </div>
               )}
 
@@ -1409,7 +1409,7 @@ export default function Home({
                   </div>
                   <div className="learn-grid">
                     {feedItems.map((publication) => (
-                      <ExplorePublicationCard key={publication.id} publication={publication} onPlay={openPlayer} />
+                      <LearnPublicationCard key={publication.id} publication={publication} onPlay={openPlayer} />
                     ))}
                   </div>
                 </div>
@@ -1471,8 +1471,8 @@ export default function Home({
       )}
 
       <footer>
-        <div className="brand" role="img" aria-label="TmochiExplore"><TmochiExploreLogo /></div>
-        <p>{isExplore ? "Interactive lessons, shaped by every choice." : "Interactive cinema, rendered in real time."}</p>
+        <div className="brand" role="img" aria-label="TMochiLearn"><TMochiLearnLogo /></div>
+        <p>{isLearn ? "Interactive lessons, shaped by every choice." : "Interactive cinema, rendered in real time."}</p>
         <span>Powered by Samsar</span>
       </footer>
 

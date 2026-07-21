@@ -1,5 +1,5 @@
-import { TmochiExploreLogo } from "../../components/tmochi-explore-logo";
+import { TMochiLearnLogo } from "../../components/tmochi-learn-logo";
 
 export function CreatorBrand() {
-  return <TmochiExploreLogo />;
+  return <TMochiLearnLogo />;
 }

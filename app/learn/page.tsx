@@ -1,5 +1,11 @@
-import { permanentRedirect } from "next/navigation";
+import type { Metadata } from "next";
+import Home from "../page";
 
-export default function LegacyLearnPage() {
-  permanentRedirect("/explore");
+export const metadata: Metadata = {
+  title: "Learn — TMochiLearn",
+  description: "Discover interactive educational stories and choose your own path through every lesson.",
+};
+
+export default function LearnPage() {
+  return <Home catalogMode="learn" />;
 }
