@@ -6,8 +6,8 @@ import CreatorStudio from "../creator-studio";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Creator Session — tMochi",
-  description: "Resume and preview a tMochi interactive film generation.",
+  title: "Creator Session — TmochiExplore",
+  description: "Resume and preview a TmochiExplore interactive film generation.",
 };
 
 export default async function CreatorSessionPage({

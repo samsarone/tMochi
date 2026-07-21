@@ -45,8 +45,8 @@ main { min-height: 100vh; background: radial-gradient(circle at 50% -15%, rgba(1
 }
 .brand { display: inline-flex; align-items: center; width: fit-content; font-size: 20px; line-height: 1; }
 .brand:focus-visible { outline: 2px solid var(--acid); outline-offset: 6px; border-radius: 2px; }
-.brand-name { display: inline-flex; align-items: center; line-height: 1; filter: drop-shadow(0 1px 5px rgba(0,0,0,.72)); }
-.brand-t-fat { display: inline-flex; align-items: center; margin-right: .14em; padding-block: .04em; color: var(--acid); font-family: var(--font-sans),sans-serif; font-size: .96em; font-style: normal; font-weight: 650; letter-spacing: -.05em; line-height: .92; }
+.brand-name { display: inline-flex; align-items: center; gap: .38em; line-height: 1; filter: drop-shadow(0 1px 5px rgba(0,0,0,.72)); }
+.brand-cat-mark { display: block; width: 1.55em; height: 1.55em; flex: 0 0 auto; border-radius: 28%; object-fit: cover; }
 .brand-word { display: inline-block; color: var(--text); font-family: var(--font-sans),sans-serif; font-size: 1em; font-style: normal; font-weight: 560; letter-spacing: -.05em; }
 .site-nav { display: flex; align-items: center; gap: 5px; margin-left: 30px; padding: 4px; border: 1px solid rgba(235,255,221,.1); border-radius: 999px; background: rgba(5,7,5,.38); backdrop-filter: blur(14px); }
 .site-nav a { min-width: 64px; height: 29px; display: grid; place-items: center; border-radius: 999px; color: #a3aca0; font-size: 10px; font-weight: 600; letter-spacing: .015em; transition: .2s ease; }

@@ -14,38 +14,42 @@ async function render(pathname = "/") {
   );
 }
 
-test("server-renders the tMochi interactive cinema landing page", async () => {
+test("server-renders the TmochiExplore interactive cinema landing page", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>tMochi — Interactive Cinema<\/title>/i);
+  assert.match(html, /<title>TmochiExplore — Interactive Cinema<\/title>/i);
   assert.match(html, /Don.t just watch/i);
   assert.match(html, /Don.t just watch\.\s*<em>Decide\.<\/em>/i);
   assert.match(html, /Interactive stories/i);
   assert.match(html, /lucide-wand-sparkles/i);
   assert.match(html, />Create<\/button>/i);
   assert.match(html, /<nav[^>]*aria-label="Main navigation"/i);
-  assert.match(html, /href="\/learn"/i);
-  assert.match(html, /brand-t-fat/i);
-  assert.doesNotMatch(html, /brand-t-notch/i);
-  assert.match(html, /brand-word[^>]*>Mochi<\/span>/i);
-  assert.doesNotMatch(html, /brand-o/i);
-  assert.doesNotMatch(html, /brand-mark/i);
+  assert.match(html, /href="\/explore"/i);
+  assert.match(html, /brand-cat-mark/i);
+  assert.match(html, /tmochi-explore-logo\.png/i);
+  assert.match(html, /brand-word[^>]*>TmochiExplore<\/span>/i);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/i);
 });
 
-test("server-renders the education-only Learn catalog", async () => {
-  const response = await render("/learn");
+test("server-renders the education-only Explore catalog", async () => {
+  const response = await render("/explore");
   assert.equal(response.status, 200);
 
   const html = await response.text();
   assert.match(html, /Choose what you/i);
-  assert.match(html, /learn next/i);
+  assert.match(html, /explore next/i);
   assert.match(html, /Interactive learning library/i);
   assert.match(html, /Educational interactive content/i);
   assert.match(html, /Explore topics/i);
+});
+
+test("redirects legacy Learn URLs to Explore", async () => {
+  const response = await render("/learn");
+  assert.equal(response.status, 308);
+  assert.equal(new URL(response.headers.get("location")).pathname, "/explore");
 });
 
 test("server-renders shared player URLs in a paused loading state", async () => {
@@ -141,9 +145,10 @@ test("keeps the viewer wired to the public interactive publication contract", as
   assert.doesNotMatch(watchPage, /ImageResponse/);
   assert.match(styles, /height:\s*100svh/);
   assert.match(styles, /player-start/);
-  assert.match(layout, /favicon\.svg\?v=5/);
+  assert.match(layout, /favicon\.svg\?v=6/);
+  assert.match(favicon, /<rect/);
+  assert.match(favicon, /#C5FF5C/i);
   assert.match(favicon, /<circle/);
-  assert.match(favicon, /transform="translate\(10\.44 24\.9\) scale\(\.0269 -\.0269\)"/);
   assert.doesNotMatch(favicon, /<text/);
   assert.match(packageJson, /"samsar-js": "0\.48\.48"/);
   await assert.rejects(access(new URL("../app/_sites-preview", import.meta.url)));

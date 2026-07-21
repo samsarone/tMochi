@@ -55,7 +55,7 @@ export async function POST(request: Request) {
   }
   if (!Number.isInteger(numLevels) || numLevels < 1 || numLevels > 3) {
     return Response.json(
-      { error: "tMochi supports one to three branching levels." },
+      { error: "TmochiExplore supports one to three branching levels." },
       { status: 400, headers: { "Cache-Control": "no-store" } },
     );
   }

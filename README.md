@@ -1,12 +1,12 @@
-# tMochi 🎬
+# TmochiExplore 🎬
 
-[![Tests](https://github.com/samsarone/tMochi/actions/workflows/ci.yml/badge.svg)](https://github.com/samsarone/tMochi/actions/workflows/ci.yml)
+[![Tests](https://github.com/samsarone/TmochiLearn/actions/workflows/ci.yml/badge.svg)](https://github.com/samsarone/TmochiLearn/actions/workflows/ci.yml)
 
 **The world’s first and only interactive cinema creator.**
 
 Initial implementation in response to Fal x Sequoia hackathon.
 
-tMochi turns a single idea into a living film with choices, alternate scenes,
+TmochiExplore turns a single idea into a living film with choices, alternate scenes,
 and endings shaped by the audience. Describe the story you want to tell, direct
 how far it can branch, and watch an entire cinematic story tree come alive.
 
@@ -16,7 +16,7 @@ happens next.
 
 ## Don’t just watch. Decide.
 
-A tMochi film moves like modern streaming cinema—until the story reaches a
+A TmochiExplore film moves like modern streaming cinema—until the story reaches a
 moment that belongs to the viewer.
 
 - A subtle **Choose the next path** cue appears before each decision.
@@ -39,9 +39,9 @@ The Creator Studio is designed for storytellers, not editing timelines.
    map fill with scenes.
 4. **Preview every route** — explore random paths or direct the story choice by
    choice.
-5. **Name the transmission** — write the public details yourself or let tMochi
+5. **Name the transmission** — write the public details yourself or let TmochiExplore
    generate a title and description.
-6. **Publish the experience** — release it to the tMochi cinema feed or download
+6. **Publish the experience** — release it to the TmochiExplore cinema feed or download
    the complete artifact package.
 
 ## Made for interactive storytellers
@@ -59,7 +59,7 @@ The Creator Studio is designed for storytellers, not editing timelines.
 
 ## A cinema with more than one ending
 
-tMochi is built around a simple belief: audiences can be more than spectators.
+TmochiExplore is built around a simple belief: audiences can be more than spectators.
 They can protect a character, follow the signal, open the forbidden door, or
 walk away—and the film should be ready for every decision.
 
@@ -68,7 +68,7 @@ feel intentional, alive enough to surprise even its creator.
 
 ## Powered by Samsar
 
-tMochi uses Samsar to create, render, resume, and publish branching films.
+TmochiExplore uses Samsar to create, render, resume, and publish branching films.
 Existing Samsar accounts work in the Creator Studio, and completed interactive
 publications flow into the same public catalog used by the viewer.
 

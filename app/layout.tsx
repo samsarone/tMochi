@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const host = incoming.get("x-forwarded-host") || incoming.get("host") || "localhost:3001";
   const protocol = incoming.get("x-forwarded-proto") || (host.startsWith("localhost") ? "http" : "https");
   const origin = `${protocol}://${host}`;
-  const title = "tMochi — Interactive Cinema";
+  const title = "TmochiExplore — Interactive Cinema";
   const description = "Watch stories that change with every choice. A futuristic interactive film experience powered by Samsar.";
 
   return {
@@ -19,16 +19,16 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     icons: {
-      icon: [{ url: "/favicon.svg?v=5", type: "image/svg+xml" }],
-      shortcut: "/favicon.svg?v=5",
+      icon: [{ url: "/favicon.svg?v=6", type: "image/svg+xml" }],
+      shortcut: "/favicon.svg?v=6",
     },
     openGraph: {
       title,
       description,
       type: "website",
       url: origin,
-      siteName: "tMochi",
-      images: [{ url: `${origin}/og.png`, width: 1733, height: 907, alt: "tMochi — Don’t just watch. Decide." }],
+      siteName: "TmochiExplore",
+      images: [{ url: `${origin}/og.png`, width: 1733, height: 907, alt: "TmochiExplore — Don’t just watch. Decide." }],
     },
     twitter: {
       card: "summary_large_image",
