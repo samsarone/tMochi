@@ -17,12 +17,6 @@ Every path belongs to one connected learning experience. Learners can explore
 different approaches, see the consequences of each choice, and build a deeper
 understanding of educational and technical subjects.
 
-## Demo
-
-[![Watch the TMochiLearn app demo](https://img.youtube.com/vi/uZgqEkFwF6I/hqdefault.jpg)](https://www.youtube.com/watch?v=uZgqEkFwF6I)
-
-*App demo screencast created with Codex using GPT 5.6 Ultra settings.*
-
 ## Don’t just watch. Explore.
 
 A TMochiLearn lesson presents clear, focused video segments and lets the learner
@@ -133,6 +127,14 @@ output. The optional Cloudflare Worker workflow is available through
 `npm run dev:worker`, `npm run build:worker`, and `npm run start:worker`.
 
 </details>
+
+<h2 align="center">Demo</h2>
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=uZgqEkFwF6I"><img src="https://img.youtube.com/vi/uZgqEkFwF6I/hqdefault.jpg" alt="Play the TMochiLearn app demo" width="640" /></a>
+</p>
+
+<p align="center"><em>App demo screencast created with Codex using GPT 5.6 Ultra settings.</em></p>
 
 ---
 
