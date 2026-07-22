@@ -18,10 +18,10 @@ different approaches, see the consequences of each choice, and build a deeper
 understanding of educational and technical subjects.
 
 <p>
-  <sub>
+  <small>
     Built with <a href="https://openai.com/codex/">Codex</a> using GPT 5.6 Sol in High and Ultra settings, with manual QA, verification, and code debugging.<br />
     Submission for the <a href="https://openai.devpost.com/">OpenAI Devpost hackathon</a>.
-  </sub>
+  </small>
 </p>
 
 ## Don’t just watch. Explore.
