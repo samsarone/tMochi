@@ -8,6 +8,11 @@
   <a href="https://github.com/samsarone/TmochiLearn/actions/workflows/ci.yml"><img src="https://github.com/samsarone/TmochiLearn/actions/workflows/ci.yml/badge.svg" alt="Tests" /></a>
 </p>
 
+<p align="center">
+  Built with <a href="https://openai.com/codex/"><img src="https://img.shields.io/badge/Codex-000000?logo=openai&logoColor=white" alt="Codex" /></a> using GPT 5.6 Sol in High and Ultra settings, with manual QA, verification, and code debugging.<br />
+  Submission for the <a href="https://openai.devpost.com/">OpenAI Devpost hackathon</a>.
+</p>
+
 TMochiLearn turns a single topic into an interactive lesson with choices,
 alternate explanations, and outcomes shaped by the learner. Describe what you
 want to teach, choose how deeply it should branch, and generate a complete
@@ -75,12 +80,6 @@ TMochiLearn uses Samsar to create, render, resume, and publish branching lessons
 Existing Samsar accounts work in the Creator Studio, and completed interactive
 publications flow into the same public catalog used by learners.
 
-## Development
-
-This project was entirely built with [OpenAI Codex](https://openai.com/codex/)
-using GPT 5.6 Sol in High and Ultra settings, with manual QA, verification, and
-code debugging.
-
 ## For contributors
 
 The project requires Node.js `>=22.13.0`.
@@ -131,11 +130,7 @@ output. The optional Cloudflare Worker workflow is available through
 <h2 align="center">Demo</h2>
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=uZgqEkFwF6I"><img src="https://img.youtube.com/vi/uZgqEkFwF6I/hqdefault.jpg" alt="Play the TMochiLearn app demo" width="640" /></a>
+  <a href="https://www.youtube.com/watch?v=uZgqEkFwF6I" target="_blank" rel="noopener noreferrer"><img src="https://img.youtube.com/vi/uZgqEkFwF6I/hqdefault.jpg" alt="Play the TMochiLearn app demo" width="640" /></a>
 </p>
 
 <p align="center"><em>App demo screencast created with Codex using GPT 5.6 Ultra settings.</em></p>
-
----
-
-*This version was created in fulfillment of the [OpenAI Build Week Devpost hackathon](https://openai.devpost.com/).*
